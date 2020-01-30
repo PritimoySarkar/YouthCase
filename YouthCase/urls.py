@@ -20,6 +20,6 @@ from Skilled import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('admin/', views.sugg)
+    path('youth/', views.sugg)
     
 ]

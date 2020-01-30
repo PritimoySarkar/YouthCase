@@ -5,45 +5,60 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
-from django.core import serailizers
+from django.core import serializers
 from django.conf import settings
 import json
 # Create your views here.
-choices={"Working with my hands":2,"Building and fixing things":2,"Working with computers":3,"Speaking or performing in front of others":1,"Working with machines and tools":2,"Singing, acting, dancing, or playing music":1,"Studying math or science":3,"Being creative (writing, art, etc.)":1,"Helping people solve problems":1,"Helping people feel better":1,"Selling things or ideas":2,"Working with numbers":3,"Being organized":1,"Following a set plan":1,"Taking industrial technology classes":2}
-
-
-
-
-
-
-
+choices={
+    "1":2,
+    "2":2,
+    "3":3,
+    "4":1,
+    "5":2,
+    "6":1,
+    "7":3,
+    "8":1,
+    "9":1,
+    "10":1,
+    "11":2,
+    "12":3,
+    "13":1,
+    "14":1,
+    "15":2
+}
 
 @api_view(["POST"])
-def sugg(string):
-    try:
-        user_input=[]
-        input1=input()
-        while input1 !="":
-            user_input.append(input1)
-            input1=input()
+def sugg(request):
         
+    user_interests = []
+    for key, value in request.POST.items():
+        user_interests.append(value)
+    # for interest in request.data["interests"]:
+    #     user_interests.append(interest)
+
+    # return Response(user_interests)
+    try:
         score=0
-        for i in user_input:
+        for i in user_interests:
             if i in choices.keys():
                 score+=choices[i]
                 
         if score<5:
-            suggestion="Gardening"
+            suggestion=1
         elif score>=5 and score<10:
-            suggestion="Makeup"
+            suggestion=2
         elif score>=10 and score<15:
-            suggestion="Tailoring"    
+            suggestion=3    
         elif score>=15 and score<20:
-            suggestion="Plumbing"
+            suggestion=4
         elif score>=20:
-            suggestion="Electrician"
+            suggestion=5
+
+        suggestionJson = {
+            "suggested_profession" : suggestion
+        }
             
-        return JsonResponse(suggestion)
+        return JsonResponse(suggestionJson)
     except ValueError as e:
         return Response(e.args[0],status.HTTP_400_BAD_REQUEST)
     
